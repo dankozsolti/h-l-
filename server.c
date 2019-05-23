@@ -245,6 +245,8 @@ void win(int id) {
         for (i = 0; i < MAX; i++)
             if (sockets[i] > -1)
                 close(sockets[i]);
+		close(fd);
+		exit(1);
     } else if (f2 < 3) {
         sendTo(sockets[0], ":win", 32);
         sendTo(sockets[1], ":lose", 32);
@@ -252,6 +254,8 @@ void win(int id) {
         for (i = 0; i < MAX; i++)
             if (sockets[i] > -1)
                 close(sockets[i]);
+		close(fd);
+		exit(1);
     } else {
         sendTo(sockets[id == 0 ? 1 : 0], ":startmove", 32);
         snprintf(oneS, sizeof(oneS), "%d", id);
@@ -420,6 +424,13 @@ void *connection_handler(void *arguments)
             } else {
                 win(id);
             }
+		} else if (valid(client_message, ":surrender") == 0){
+			sendTo(sockets[id == 0 ? 1 : 0], ":surrwin", 32);
+		    for (i = 0; i < MAX; i++)
+		        if (sockets[i] > -1)
+		            close(sockets[i]);
+			close(fd);
+			exit(1);
         } else {
 		    write(sock, client_message, read_size); //Ismeretlen üzenet, kiírja a konzolba amit nem tudott feldolgozni pl. :apple
         }
