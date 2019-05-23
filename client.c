@@ -85,6 +85,13 @@ int main() {
             
                 int x, rx, y, ry;
                 scanf("%d %d", &x, &y);
+
+				if (x < 0 && y < 0) {
+					send(fd, ":surrender", 32, 0);
+					printf("Feladtad a játékot!\n");
+					break;
+				}
+
                 if (valid(buffer, ":getrem") == 0) {
                     if(table[x][y] == 0) {
                         printf("Itt nincs bábú.\n");
@@ -159,6 +166,8 @@ int main() {
             printf("Megnyerted a játékot.\n");
         } else if (valid(buffer, ":lose") == 0) {
             printf("Elveszítetted sajnos a játékot.\n");
+		} else if (valid(buffer, ":surrwin") == 0) {
+            printf("Az ellenfeled feladta a játékot.\n");
         } else if (valid(buffer, ":update") == 0) {
             update();
         } else {
